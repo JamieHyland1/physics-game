@@ -5,57 +5,85 @@
 	<meta charset="utf-8">
 	<title></title>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="./classes/ball.html"></script>
-	<script type="text/javascript">
-		window.onload = function () {
-			var c = document.getElementById("myCanvas");
-			var ctx = c.getContext("2d");
-			var rect = c.getBoundingClientRect();
-			var x = 0;
-			var y = 480;
-			var vx = 0;
-			var vy = 0;
-			var t = 0;
-			var dt = 0.0001;
-			var ax = 1;
-			var ay = -9.8;
-			var speed = 1;
-			var angle = 55;
-			var ball = new Ball(5);
-			var z = -0.1;
-
-			ball.x = x;
-			ball.y = y;
-
-			    
-		function animate () {
-			ctx.clearRect(0, 0, c.width, c.height);
-			window.requestAnimationFrame(animate, ctx);
-			
-            
-            
-			ball.x += x + 0.05;
-			ball.y +=  z;
-			console.log(ball.y)
-			if(ball.y < 200)
-			{
-				z = .1
-			}
-			ball.draw(ctx);
-		};
-		//call it once to kick it off 
-		//after that it recursively calls itself
-		window.requestAnimationFrame(animate, ctx);
-    };
-	</script>
+	<script src="./classes/vector.js"></script>
+	<script src="./classes/Particle.js"></script>
+	<script src="./classes/ball.js"></script>
+	
 </head>
 
 <body>
 	<header>
 
 	</header>
-	<canvas id="myCanvas" width="640" height="480" style="border:1px solid #000000;">
+	<div>
+	
+	</div>
+	
+	<canvas id="myCanvas" width="1040" height="580" style="border:1px solid #000000;
+														  background: #7F7B71">
 	</canvas>
+	
+	
+	<script type="text/javascript">
+		window.onload = function () 
+		{
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			var rect = c.getBoundingClientRect();
+			var recursive = true;
+			var x = 0;
+			var y = 0;
+			var t = 0;
+			var dt = 0.1;
+			var ux = 0;
+			var uy = 480;
+			var G = 5.4;
+			var angle =  45
+			var speed =  90;
+			var particle = [];
+			var mouseX = event.clientX;
+    		var mouseY = event.clientY;
+			var planet = new Ball(c.width/2,c.height/2,10,"#FFF5F3"); //add 
+						
+			for(var i = 0; i < 5; i ++)
+			{
+			  particle.push(new Particle(Math.random()*c.width,Math.random()*100))
+			}
+
+			planet.draw(ctx);
+	
+			function animate ()
+			{
+				
+			//clear the screen after each frame
+			ctx.clearRect(0, 0, c.width, c.height);
+		  
+			for(var j = 0; j < particle.length; j++)
+			{	
+				//attract each particle in the particle array to the planet
+				particle[j].attraction(planet.position)
+				//move the particle
+				particle[j].timeStep();
+				//redraw the particle
+				particle[j].draw(ctx);
+			}
+			//draw the planet object
+			planet.draw(ctx)
+			
+			window.requestAnimationFrame(animate, ctx);
+			};
+			
+			window.requestAnimationFrame(animate, ctx);
+			
+			function showCoords(event)
+			{
+				mouseX = event.clientX;
+				console.log(mouseX)
+    		    mouseY = event.clientY;
+			}
+		
+    };
+	</script>
 </body>
 
 </html>

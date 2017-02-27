@@ -1,8 +1,9 @@
-function Ball (radius, color) {
+function Ball (x,y,radius, color) {
   if (radius === undefined) { radius = 40; }
   if (color === undefined) { color = "#ff0000"; }
-  this.x = 0;
-  this.y = 0;
+  this.position = new Vector(x,y)
+
+  this.color = color;
   this.radius = radius;
   this.rotation = 0;
   this.scaleX = 1;
@@ -12,7 +13,7 @@ function Ball (radius, color) {
 
 Ball.prototype.draw = function (context) {
   context.save();
-  context.translate(this.x, this.y);
+  context.translate(this.position.x, this.position.y);
   context.rotate(this.rotation);
   context.scale(this.scaleX, this.scaleY);
   
